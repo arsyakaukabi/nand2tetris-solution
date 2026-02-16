@@ -1,0 +1,236 @@
+function Pipe.new 0
+    push constant 7
+    call Memory.alloc 1
+    pop pointer 0
+    push argument 0
+    pop this 0
+    push argument 1
+    pop this 1
+    push argument 2
+    pop this 2
+    push argument 3
+    pop this 3
+    push argument 4
+    pop this 4
+    push argument 5
+    pop this 5
+    push constant 0
+    pop this 6
+    push pointer 0
+    return
+function Pipe.respawn 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 0
+    push argument 2
+    pop this 1
+    push constant 0
+    pop this 6
+    push constant 0
+    return
+function Pipe.update 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push this 5
+    sub
+    pop this 0
+    push constant 0
+    return
+function Pipe.markScored 0
+    push argument 0
+    pop pointer 0
+    push constant 1
+    neg
+    pop this 6
+    push constant 0
+    return
+function Pipe.isScored 0
+    push argument 0
+    pop pointer 0
+    push this 6
+    return
+function Pipe.isOffscreen 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push this 3
+    add
+    push constant 0
+    lt
+    not
+    if-goto Pipe_1
+    push constant 1
+    neg
+    return
+    goto Pipe_0
+label Pipe_1
+label Pipe_0
+    push constant 0
+    return
+function Pipe.passedBy 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    push this 0
+    push this 3
+    add
+    gt
+    not
+    if-goto Pipe_3
+    push constant 1
+    neg
+    return
+    goto Pipe_2
+label Pipe_3
+label Pipe_2
+    push constant 0
+    return
+function Pipe.collides 2
+    push argument 0
+    pop pointer 0
+    push argument 1
+    push argument 3
+    add
+    push constant 1
+    sub
+    pop local 0
+    push argument 2
+    push argument 3
+    add
+    push constant 1
+    sub
+    pop local 1
+    push local 0
+    push this 0
+    lt
+    push argument 1
+    push this 0
+    push this 3
+    add
+    push constant 1
+    sub
+    gt
+    or
+    not
+    if-goto Pipe_5
+    push constant 0
+    return
+    goto Pipe_4
+label Pipe_5
+label Pipe_4
+    push argument 2
+    push this 1
+    lt
+    push local 1
+    push this 1
+    push this 2
+    add
+    push constant 1
+    sub
+    gt
+    or
+    not
+    if-goto Pipe_7
+    push constant 1
+    neg
+    return
+    goto Pipe_6
+label Pipe_7
+label Pipe_6
+    push constant 0
+    return
+function Pipe.draw 2
+    push argument 0
+    pop pointer 0
+    push this 0
+    pop local 0
+    push this 0
+    push this 3
+    add
+    push constant 1
+    sub
+    pop local 1
+    push local 1
+    push constant 0
+    lt
+    not
+    if-goto Pipe_9
+    push constant 0
+    return
+    goto Pipe_8
+label Pipe_9
+label Pipe_8
+    push local 0
+    push constant 511
+    gt
+    not
+    if-goto Pipe_11
+    push constant 0
+    return
+    goto Pipe_10
+label Pipe_11
+label Pipe_10
+    push local 0
+    push constant 0
+    lt
+    not
+    if-goto Pipe_13
+    push constant 0
+    pop local 0
+    goto Pipe_12
+label Pipe_13
+label Pipe_12
+    push local 1
+    push constant 511
+    gt
+    not
+    if-goto Pipe_15
+    push constant 511
+    pop local 1
+    goto Pipe_14
+label Pipe_15
+label Pipe_14
+    push constant 1
+    neg
+    call Screen.setColor 1
+    pop temp 0
+    push this 1
+    push constant 0
+    gt
+    not
+    if-goto Pipe_17
+    push local 0
+    push constant 0
+    push local 1
+    push this 1
+    push constant 1
+    sub
+    call Screen.drawRectangle 4
+    pop temp 0
+    goto Pipe_16
+label Pipe_17
+label Pipe_16
+    push this 1
+    push this 2
+    add
+    push this 4
+    lt
+    not
+    if-goto Pipe_19
+    push local 0
+    push this 1
+    push this 2
+    add
+    push local 1
+    push this 4
+    push constant 1
+    sub
+    call Screen.drawRectangle 4
+    pop temp 0
+    goto Pipe_18
+label Pipe_19
+label Pipe_18
+    push constant 0
+    return

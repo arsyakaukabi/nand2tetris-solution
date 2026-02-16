@@ -1,0 +1,83 @@
+class Bird {
+  field int x, y, size;
+  field int vy, gravity, flapVelocity;
+  field int spawnY, maxY;
+
+  constructor Bird new(int startX, int startY, int birdSize, int groundY) {
+    let x = startX;
+    let y = startY;
+    let spawnY = startY;
+    let size = birdSize;
+    let vy = 0;
+    let gravity = 1;
+    let flapVelocity = -10;
+    let maxY = groundY - birdSize;
+    return this;
+  }
+
+  method void reset() {
+    let y = spawnY;
+    let vy = 0;
+    return;
+  }
+
+  method void flap() {
+    let vy = flapVelocity;
+    return;
+  }
+
+  method void update() {
+    let vy = vy + gravity;
+    let y = y + vy;
+    return;
+  }
+
+  method boolean hitsBounds() {
+    if (y < 0) {
+      return true;
+    }
+    if (y > maxY) {
+      return true;
+    }
+    return false;
+  }
+
+  method void draw() {
+    var int top;
+    var int bottom;
+    var int right;
+
+    let top = y;
+    let bottom = y + size - 1;
+    let right = x + size - 1;
+
+    if (bottom < 0) {
+      return;
+    }
+    if (top > 239) {
+      return;
+    }
+    if (top < 0) {
+      let top = 0;
+    }
+    if (bottom > 239) {
+      let bottom = 239;
+    }
+
+    do Screen.setColor(true);
+    do Screen.drawRectangle(x, top, right, bottom);
+    return;
+  }
+
+  method int getX() {
+    return x;
+  }
+
+  method int getY() {
+    return y;
+  }
+
+  method int getSize() {
+    return size;
+  }
+}

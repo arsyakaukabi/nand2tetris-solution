@@ -6,3 +6,4 @@ web-ide/
 .zip_stage*/
 .zip_staging/
 __pycache__/
+*.html

@@ -1,0 +1,277 @@
+class Game {
+  field Bird bird;
+  field Pipe pipe;
+  field String titleMsg, scoreMsg, startMsg, overMsg;
+
+  field int state;     // 0: start, 1: running, 2: game over
+  field int score;
+  field int groundY;
+  field int gapIndex;
+  field boolean keyLatch;
+
+  constructor Game new() {
+    let groundY = 240;
+    let bird = Bird.new(90, 110, 6, groundY);
+    let pipe = Pipe.new(360, 50, 68, 24, groundY, 2);
+    let state = 0;
+    let score = 0;
+    let gapIndex = 0;
+    let keyLatch = false;
+    do initUiText();
+    return this;
+  }
+
+  method void initUiText() {
+    let titleMsg = String.new(11);
+    do titleMsg.appendChar(70);   // F
+    do titleMsg.appendChar(108);  // l
+    do titleMsg.appendChar(97);   // a
+    do titleMsg.appendChar(112);  // p
+    do titleMsg.appendChar(112);  // p
+    do titleMsg.appendChar(121);  // y
+    do titleMsg.appendChar(32);   // space
+    do titleMsg.appendChar(66);   // B
+    do titleMsg.appendChar(105);  // i
+    do titleMsg.appendChar(114);  // r
+    do titleMsg.appendChar(100);  // d
+
+    let scoreMsg = String.new(7);
+    do scoreMsg.appendChar(83);   // S
+    do scoreMsg.appendChar(99);   // c
+    do scoreMsg.appendChar(111);  // o
+    do scoreMsg.appendChar(114);  // r
+    do scoreMsg.appendChar(101);  // e
+    do scoreMsg.appendChar(58);   // :
+    do scoreMsg.appendChar(32);   // space
+
+    let startMsg = String.new(22);
+    do startMsg.appendChar(80);   // P
+    do startMsg.appendChar(114);  // r
+    do startMsg.appendChar(101);  // e
+    do startMsg.appendChar(115);  // s
+    do startMsg.appendChar(115);  // s
+    do startMsg.appendChar(32);   // space
+    do startMsg.appendChar(97);   // a
+    do startMsg.appendChar(110);  // n
+    do startMsg.appendChar(121);  // y
+    do startMsg.appendChar(32);   // space
+    do startMsg.appendChar(107);  // k
+    do startMsg.appendChar(101);  // e
+    do startMsg.appendChar(121);  // y
+    do startMsg.appendChar(32);   // space
+    do startMsg.appendChar(116);  // t
+    do startMsg.appendChar(111);  // o
+    do startMsg.appendChar(32);   // space
+    do startMsg.appendChar(115);  // s
+    do startMsg.appendChar(116);  // t
+    do startMsg.appendChar(97);   // a
+    do startMsg.appendChar(114);  // r
+    do startMsg.appendChar(116);  // t
+
+    let overMsg = String.new(25);
+    do overMsg.appendChar(71);    // G
+    do overMsg.appendChar(97);    // a
+    do overMsg.appendChar(109);   // m
+    do overMsg.appendChar(101);   // e
+    do overMsg.appendChar(32);    // space
+    do overMsg.appendChar(79);    // O
+    do overMsg.appendChar(118);   // v
+    do overMsg.appendChar(101);   // e
+    do overMsg.appendChar(114);   // r
+    do overMsg.appendChar(32);    // space
+    do overMsg.appendChar(45);    // -
+    do overMsg.appendChar(32);    // space
+    do overMsg.appendChar(112);   // p
+    do overMsg.appendChar(114);   // r
+    do overMsg.appendChar(101);   // e
+    do overMsg.appendChar(115);   // s
+    do overMsg.appendChar(115);   // s
+    do overMsg.appendChar(32);    // space
+    do overMsg.appendChar(97);    // a
+    do overMsg.appendChar(110);   // n
+    do overMsg.appendChar(121);   // y
+    do overMsg.appendChar(32);    // space
+    do overMsg.appendChar(107);   // k
+    do overMsg.appendChar(101);   // e
+    do overMsg.appendChar(121);   // y
+    return;
+  }
+
+  function boolean anyKey() {
+    var int key;
+    let key = Keyboard.keyPressed();
+    if (key = 0) {
+      return false;
+    }
+    return true;
+  }
+
+  method void run() {
+    var boolean pressed;
+
+    while (true) {
+      let pressed = Game.anyKey();
+      do handleInput(pressed);
+
+      if (state = 1) {
+        do updateRunning();
+      }
+
+      do render();
+      do Sys.wait(2);
+    }
+    return;
+  }
+
+  method void handleInput(boolean pressed) {
+    if (pressed) {
+      if (~keyLatch) {
+        let keyLatch = true;
+        if (state = 0) {
+          do startRun();
+        } else {
+          if (state = 1) {
+            do bird.flap();
+          } else {
+            do startRun();
+          }
+        }
+      }
+    } else {
+      let keyLatch = false;
+    }
+    return;
+  }
+
+  method void startRun() {
+    let state = 1;
+    let score = 0;
+    let gapIndex = 0;
+    do bird.reset();
+    do pipe.respawn(360, nextGapY());
+    return;
+  }
+
+  method int nextGapY() {
+    var int value;
+
+    if (gapIndex = 0) {
+      let value = 20;
+    } else {
+      if (gapIndex = 1) {
+        let value = 44;
+      } else {
+        if (gapIndex = 2) {
+          let value = 70;
+        } else {
+          if (gapIndex = 3) {
+            let value = 30;
+          } else {
+            if (gapIndex = 4) {
+              let value = 82;
+            } else {
+              if (gapIndex = 5) {
+                let value = 56;
+              } else {
+                if (gapIndex = 6) {
+                  let value = 24;
+                } else {
+                  if (gapIndex = 7) {
+                    let value = 76;
+                  } else {
+                    if (gapIndex = 8) {
+                      let value = 38;
+                    } else {
+                      let value = 64;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    let gapIndex = gapIndex + 1;
+    if (gapIndex = 10) {
+      let gapIndex = 0;
+    }
+
+    return value;
+  }
+
+  method void updateRunning() {
+    var boolean scored;
+
+    do bird.update();
+    do pipe.update();
+
+    if (pipe.isOffscreen()) {
+      do pipe.respawn(520, nextGapY());
+    }
+
+    if (pipe.collides(bird.getX(), bird.getY(), bird.getSize())) {
+      let state = 2;
+    }
+
+    if (bird.hitsBounds()) {
+      let state = 2;
+    }
+
+    let scored = pipe.isScored();
+    if ((~scored) & pipe.passedBy(bird.getX())) {
+      let score = score + 1;
+      do pipe.markScored();
+    }
+
+    return;
+  }
+
+  method void render() {
+    do Screen.clearScreen();
+    do Screen.setColor(true);
+    do Screen.drawRectangle(0, groundY, 511, 255);
+    do pipe.draw();
+    do bird.draw();
+    do drawHud();
+    do drawUi();
+    return;
+  }
+
+  method void drawHud() {
+    var int i;
+    var int bars;
+
+    let bars = score;
+    if (bars > 25) {
+      let bars = 25;
+    }
+
+    let i = 0;
+    while (i < bars) {
+      do Screen.drawRectangle((i * 4), 0, ((i * 4) + 2), 4);
+      let i = i + 1;
+    }
+    return;
+  }
+
+  method void drawUi() {
+    do Output.moveCursor(0, 0);
+    do Output.printString(titleMsg);
+
+    do Output.moveCursor(1, 0);
+    do Output.printString(scoreMsg);
+    do Output.printInt(score);
+
+    if (state = 0) {
+      do Output.moveCursor(3, 0);
+      do Output.printString(startMsg);
+    }
+    if (state = 2) {
+      do Output.moveCursor(3, 0);
+      do Output.printString(overMsg);
+    }
+    return;
+  }
+}

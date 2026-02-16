@@ -1,0 +1,110 @@
+class Pipe {
+  field int x, gapY, gapHeight;
+  field int width, groundY, speed;
+  field boolean scored;
+
+  constructor Pipe new(
+    int startX,
+    int startGapY,
+    int startGapHeight,
+    int pipeWidth,
+    int floorY,
+    int pipeSpeed
+  ) {
+    let x = startX;
+    let gapY = startGapY;
+    let gapHeight = startGapHeight;
+    let width = pipeWidth;
+    let groundY = floorY;
+    let speed = pipeSpeed;
+    let scored = false;
+    return this;
+  }
+
+  method void respawn(int newX, int newGapY) {
+    let x = newX;
+    let gapY = newGapY;
+    let scored = false;
+    return;
+  }
+
+  method void update() {
+    let x = x - speed;
+    return;
+  }
+
+  method void markScored() {
+    let scored = true;
+    return;
+  }
+
+  method boolean isScored() {
+    return scored;
+  }
+
+  method boolean isOffscreen() {
+    if ((x + width) < 0) {
+      return true;
+    }
+    return false;
+  }
+
+  method boolean passedBy(int birdX) {
+    if (birdX > (x + width)) {
+      return true;
+    }
+    return false;
+  }
+
+  method boolean collides(int birdX, int birdY, int birdSize) {
+    var int birdRight;
+    var int birdBottom;
+
+    let birdRight = birdX + birdSize - 1;
+    let birdBottom = birdY + birdSize - 1;
+
+    if ((birdRight < x) | (birdX > (x + width - 1))) {
+      return false;
+    }
+
+    if ((birdY < gapY) | (birdBottom > (gapY + gapHeight - 1))) {
+      return true;
+    }
+
+    return false;
+  }
+
+  method void draw() {
+    var int left;
+    var int right;
+
+    let left = x;
+    let right = x + width - 1;
+
+    if (right < 0) {
+      return;
+    }
+    if (left > 511) {
+      return;
+    }
+
+    if (left < 0) {
+      let left = 0;
+    }
+    if (right > 511) {
+      let right = 511;
+    }
+
+    do Screen.setColor(true);
+
+    if (gapY > 0) {
+      do Screen.drawRectangle(left, 0, right, gapY - 1);
+    }
+
+    if ((gapY + gapHeight) < groundY) {
+      do Screen.drawRectangle(left, gapY + gapHeight, right, groundY - 1);
+    }
+
+    return;
+  }
+}

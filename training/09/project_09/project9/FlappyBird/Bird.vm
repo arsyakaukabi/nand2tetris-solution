@@ -1,0 +1,165 @@
+function Bird.new 0
+    push constant 8
+    call Memory.alloc 1
+    pop pointer 0
+    push argument 0
+    pop this 0
+    push argument 1
+    pop this 1
+    push argument 1
+    pop this 6
+    push argument 2
+    pop this 2
+    push constant 0
+    pop this 3
+    push constant 1
+    pop this 4
+    push constant 10
+    neg
+    pop this 5
+    push argument 3
+    push argument 2
+    sub
+    pop this 7
+    push pointer 0
+    return
+function Bird.reset 0
+    push argument 0
+    pop pointer 0
+    push this 6
+    pop this 1
+    push constant 0
+    pop this 3
+    push constant 0
+    return
+function Bird.flap 0
+    push argument 0
+    pop pointer 0
+    push this 5
+    pop this 3
+    push constant 0
+    return
+function Bird.update 0
+    push argument 0
+    pop pointer 0
+    push this 3
+    push this 4
+    add
+    pop this 3
+    push this 1
+    push this 3
+    add
+    pop this 1
+    push constant 0
+    return
+function Bird.hitsBounds 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    push constant 0
+    lt
+    not
+    if-goto Bird_1
+    push constant 1
+    neg
+    return
+    goto Bird_0
+label Bird_1
+label Bird_0
+    push this 1
+    push this 7
+    gt
+    not
+    if-goto Bird_3
+    push constant 1
+    neg
+    return
+    goto Bird_2
+label Bird_3
+label Bird_2
+    push constant 0
+    return
+function Bird.draw 3
+    push argument 0
+    pop pointer 0
+    push this 1
+    pop local 0
+    push this 1
+    push this 2
+    add
+    push constant 1
+    sub
+    pop local 1
+    push this 0
+    push this 2
+    add
+    push constant 1
+    sub
+    pop local 2
+    push local 1
+    push constant 0
+    lt
+    not
+    if-goto Bird_5
+    push constant 0
+    return
+    goto Bird_4
+label Bird_5
+label Bird_4
+    push local 0
+    push constant 239
+    gt
+    not
+    if-goto Bird_7
+    push constant 0
+    return
+    goto Bird_6
+label Bird_7
+label Bird_6
+    push local 0
+    push constant 0
+    lt
+    not
+    if-goto Bird_9
+    push constant 0
+    pop local 0
+    goto Bird_8
+label Bird_9
+label Bird_8
+    push local 1
+    push constant 239
+    gt
+    not
+    if-goto Bird_11
+    push constant 239
+    pop local 1
+    goto Bird_10
+label Bird_11
+label Bird_10
+    push constant 1
+    neg
+    call Screen.setColor 1
+    pop temp 0
+    push this 0
+    push local 0
+    push local 2
+    push local 1
+    call Screen.drawRectangle 4
+    pop temp 0
+    push constant 0
+    return
+function Bird.getX 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    return
+function Bird.getY 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    return
+function Bird.getSize 0
+    push argument 0
+    pop pointer 0
+    push this 2
+    return

@@ -1,0 +1,109 @@
+class Memory{
+
+	static Array RAM;
+	static Array freeList;
+	
+	function void init(){
+		let RAM = 0;
+		let freeList = 2048;
+		let freeList[0] = -1;
+		let freeList[1] = 16384 - 2048 - 2;
+		return;
+	}
+
+	function int peek(int address){
+		return RAM[address];
+	}
+	
+	function void poke(int address, int value){
+		let RAM[address] = value;
+		return;
+	}
+	
+	function Array alloc(int size){
+		var int prev, curr, next;
+		var int blockSize, newFree;
+		
+		if(size < 0){
+			do Sys.error(5);
+		}
+		
+		let prev = -1;
+		let curr = freeList;
+		while(curr > -1){
+			let blockSize = curr[1];
+			
+			// Split only when at least 2 words remain for a free-list header.
+			if((size + 1) < blockSize){
+				let newFree = curr + size + 2;
+				let newFree[0] = curr[0];
+				let newFree[1] = blockSize - size - 2;
+				if(prev < 0){
+					let freeList = newFree;
+				} else {
+					let prev[0] = newFree;
+				}
+				let curr[0] = -1;
+				let curr[1] = size;
+				return curr + 2;
+			}
+			
+			// Exact fit (or too small to split): consume whole block.
+			if(~(blockSize < size)){
+				let next = curr[0];
+				if(prev < 0){
+					let freeList = next;
+				} else {
+					let prev[0] = next;
+				}
+				let curr[0] = -1;
+				return curr + 2;
+			}
+			
+			let prev = curr;
+			let curr = curr[0];
+		}
+		
+		do Sys.error(6);
+		return 0;
+	}
+	
+	function void deAlloc(Array array){
+		var int block, prev, curr;
+		
+		let block = array - 2;
+		let prev = -1;
+		let curr = freeList;
+		
+		// Insert in ascending address order.
+		while((curr > -1) & (curr < block)){
+			let prev = curr;
+			let curr = curr[0];
+		}
+		
+		let block[0] = curr;
+		if(prev < 0){
+			let freeList = block;
+		} else {
+			let prev[0] = block;
+		}
+		
+		// Coalesce with next free block.
+		if(~(curr < 0)){
+			if((block + block[1] + 2) = curr){
+				let block[1] = block[1] + 2 + curr[1];
+				let block[0] = curr[0];
+			}
+		}
+		
+		// Coalesce with previous free block.
+		if(~(prev < 0)){
+			if((prev + prev[1] + 2) = block){
+				let prev[1] = prev[1] + 2 + block[1];
+				let prev[0] = block[0];
+			}
+		}
+		
+		return;
+	}
+}
