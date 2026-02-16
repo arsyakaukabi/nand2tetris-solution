@@ -1,0 +1,8 @@
+.DS_Store
+**/.DS_Store
+
+web-ide/
+
+.zip_stage*/
+.zip_staging/
+__pycache__/
